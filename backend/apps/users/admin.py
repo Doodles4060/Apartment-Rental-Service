@@ -8,7 +8,6 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ['email', 'is_verified', 'is_staff', 'is_active', 'date_joined']
     list_filter = ['is_verified', 'is_staff', 'is_active']
     search_fields = ['email']
-    ordering = ['email']
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

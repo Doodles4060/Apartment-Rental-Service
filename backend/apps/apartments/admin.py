@@ -2,11 +2,19 @@ from django.contrib import admin
 
 from .models import Apartment
 
-class ApartmentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'price', 'number_of_rooms', 'square', 'availability', 'owner', 'created_at', 'updated_at')
+@admin.register(Apartment)
+class CustomApartmentAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'price', 'number_of_rooms', 'square', 'availability', 'owner', 'created_at', 'updated_at']
     list_filter = ['availability']
-    search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
-    ordering = ('-created_at',)
+    search_fields = ['name', 'slug', 'description']
 
-admin.site.register(Apartment, ApartmentAdmin)
+    fieldsets = (
+        (None, {'fields': ('slug',)}),
+        ('General', {'fields': ('name', 'description', 'price')}),
+        ('Measurements', {'fields': ('number_of_rooms', 'square')}),
+        ('Availability', {'fields': ('availability', 'owner',)}),
+    )
+
+    filter_horizontal = ()
+    ordering = ('-created_at',)
