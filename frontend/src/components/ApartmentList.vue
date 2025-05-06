@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, watch} from 'vue'
 import axios from 'axios'
 
 const baseUrl = import.meta.env.VITE_API_URL
@@ -57,10 +57,11 @@ const fetchApartments = async (url = null) => {
   }
 }
 
-const applyFilters = () => {
+// Apply filters dynamically
+watch(filters, () => {
   currentPage.value = 1
   fetchApartments()
-}
+}, {deep: true})
 
 onMounted(() => {
   fetchApartments()
@@ -68,47 +69,50 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="apartment-wrapper">
     <!-- Filters -->
-    <form @submit.prevent="applyFilters">
-      <input type="number" v-model.number="filters.price_min" placeholder="Min Price" />
-      <input type="number" v-model.number="filters.price_max" placeholder="Max Price" />
-      <input type="number" v-model.number="filters.rooms" placeholder="Rooms" />
-      <select v-model="filters.availability">
-        <option :value="null">Any Availability</option>
-        <option :value="true">Available</option>
-        <option :value="false">Unavailable</option>
+    <form class="filters flex flex-col md:flex-row gap-2">
+      <input class="filter-input" type="text" v-model="filters.search" placeholder="Search..."/>
+      <input class="filter-input" type="number" v-model.number="filters.price_min" placeholder="Min Price"/>
+      <input class="filter-input" type="number" v-model.number="filters.price_max" placeholder="Max Price"/>
+      <input class="filter-input" type="number" v-model.number="filters.rooms" placeholder="Rooms"/>
+      <select v-model="filters.availability" class="select">
+        <option :value="null" class="list-choice text-gray-700">Any Availability</option>
+        <option :value="true" class="list-choice text-green-500">Available</option>
+        <option :value="false" class="list-choice text-red-500">Unavailable</option>
       </select>
-      <input type="text" v-model="filters.search" placeholder="Search..." />
-      <button type="submit">Apply</button>
     </form>
 
     <!-- Apartment List -->
-    <div v-for="apartment in apartments" :key="apartment.slug">
-      <div :class="apartment.availability ? 'bg-red-500' : 'bg-green-500'">
+    <div v-for="apartment in apartments" :key="apartment.slug" :class="{'opacity-50': !apartment.availability}"
+         class="apartment-card">
+      <div>
         <h2>
           <router-link :to="`/apartment/${apartment.slug}`">{{ apartment.name }}</router-link>
         </h2>
       </div>
+      <span v-if="apartment.availability" class="text-green-500">Available</span>
+      <span v-else class="text-red-500">Unavailable</span>
     </div>
 
     <!-- Pagination -->
-    <div>
-      <button @click="fetchApartments(prevUrl)" :disabled="!prevUrl">←</button>
-
+    <div class="pagination flex flex-row gap-2 justify-center items-center">
+      <button class="btn btn-blue" @click="fetchApartments(prevUrl)" :disabled="!prevUrl">←</button>
       <span v-for="i in pageCount" :key="i">
         <span v-if="i === currentPage">
-          <strong>{{ i }}</strong>
+          <button class="current-page btn btn-blue-outline" disabled>
+            {{ i }}
+          </button>
         </span>
         <span v-else>
-          <button
-              @click="fetchApartments(`${baseUrl}/apartments/apartments/?page=${i}&${buildQuery()}`)">
+          <button class="page btn btn-blue"
+                  @click="fetchApartments(`${baseUrl}/apartments/apartments/?page=${i}&${buildQuery()}`)">
             {{ i }}
           </button>
         </span>
       </span>
 
-      <button @click="fetchApartments(nextUrl)" :disabled="!nextUrl">→</button>
+      <button class="btn btn-blue" @click="fetchApartments(nextUrl)" :disabled="!nextUrl">→</button>
     </div>
   </div>
 </template>

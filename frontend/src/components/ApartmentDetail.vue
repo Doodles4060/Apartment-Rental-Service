@@ -16,24 +16,28 @@ onMounted(fetchApartment)
 </script>
 
 <template>
-  <div v-if="apartment">
-    <h1>{{ apartment.name }}</h1>
-    <span>{{ apartment.slug }}</span>
-    <hr>
-    <div class="description">
-      <span>Apartment description:</span>
-      <p>{{ apartment.description }}</p>
+  <div v-if="apartment" class="apartment-detail flex flex-col gap-4">
+    <div class="apartment-header flex flex-col gap-1">
+      <span class="apartment-name">{{ apartment.name }}</span>
+      <span class="apartment-slug">{{ apartment.slug }}</span>
+      <div v-if="apartment.availability">
+        <span class="availability text-green-500">Available</span>
+      </div>
+      <div v-else>
+        <span class="availability text-red-500">Not available</span>
+      </div>
     </div>
-    <p>Price: ${{ apartment.price }}</p>
-    <p>Rooms: {{ apartment.number_of_rooms }}</p>
-    <p>Size: {{ apartment.square }} m²</p>
-    <p v-if="apartment.availability">
-      <span class="availability">Available</span>
-    </p>
-    <p v-else>
-      <span class="availability">Not available</span>
-    </p>
-    <p>Owner: {{apartment.owner}}</p>
+    <hr>
+    <div class="apartment-body flex flex-col gap-2">
+      <div class="apartment-description flex flex-col gap-2">
+        <span>Apartment description:</span>
+        <span>{{ apartment.description }}</span>
+      </div>
+      <span>Owner: {{apartment.owner}}</span>
+      <span>Rooms: {{ apartment.number_of_rooms }}</span>
+      <span>Size: {{ apartment.square }} m²</span>
+      <span>Price: ${{ apartment.price }}</span>
+    </div>
   </div>
   <div v-else>
     <p>Loading details...</p>

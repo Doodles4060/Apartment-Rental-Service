@@ -1,38 +1,102 @@
 @import "./base.css";
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+    grid-template-rows: 100px auto 200px;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+
+.btn {
+    @apply font-bold py-2 px-4 rounded;
+}
+.btn-blue {
+    @apply bg-blue-500 text-white;
+}
+.btn-blue:hover {
+    @apply bg-blue-700;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+
+.btn-blue-outline {
+    @apply bg-transparent text-blue-700 font-semibold border border-blue-500;
+}
+.btn-blue-outline:disabled {
+    @apply bg-blue-500 text-white cursor-not-allowed;
+}
+.btn-blue-outline:hover {
+    @apply bg-blue-500 text-white;
 }
 
-@media (min-width: 1024px) {
-  body {
+
+.header, .main, .footer {
+    padding: 0 2rem 0 2rem;
+}
+.header {
+    grid-template-columns: 1fr auto;
+}
+.brand {
+    img {
+        width: 50px;
+        aspect-ratio: 1/1;
+    }
+}
+
+
+.filters {
+}
+
+.filter-input {
+    @apply appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight
+}
+.filter-input:focus {
+    @apply outline-none bg-white border-gray-500
+}
+.select {
+    @apply block appearance-none w-full bg-white border border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight;
+    color: #181818;
+}
+.select:hover {
+    @apply border-gray-500
+}
+.select:focus {
+    @apply outline-none
+}
+
+.apartment-card {
+    @apply rounded-lg shadow-md p-4 bg-gray-200 border border-gray-200 rounded;
+
+    margin: 10px 0 10px 0;
     display: flex;
-    place-items: center;
-  }
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    color: #181818;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.apartment-card-unavailable {
+    filter: opacity(50%);
+}
+
+.pagination {
+    padding: 10px 0 10px 0;
+}
+
+.apartment-detail {
+    @apply rounded-lg shadow-md p-4 bg-gray-200 border border-gray-200 rounded;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: #181818;
+}
+.apartment-name {
+    @apply text-2xl font-bold;
+}
+.apartment-slug {
+    @apply text-sm font-bold text-gray-400;
+}
+.apartment-description {
+    margin-bottom: 1rem;
 }
